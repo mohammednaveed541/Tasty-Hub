@@ -1,13 +1,13 @@
 // Firebase Configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyC7w65lQoNU8xPkFO40eyaGKobKKtCys0A",
-    authDomain: "tasty-hub-1a9a8.firebaseapp.com",
-    databaseURL: "https://tasty-hub-1a9a8-default-rtdb.firebaseio.com",
-    projectId: "tasty-hub-1a9a8",
-    storageBucket: "tasty-hub-1a9a8.firebasestorage.app",
-    messagingSenderId: "370858779279",
-    appId: "1:370858779279:web:d9d4f391f4d1952bc786fa",
-    measurementId: "G-X2YKMX3C83"
+    apiKey: "AIzaSyA24BMQXIYD-jZY5Yb3s9ChtgqsewCclX0",
+  authDomain: "tasty-hub-944d3.firebaseapp.com",
+  databaseURL: "https://tasty-hub-944d3-default-rtdb.firebaseio.com",
+  projectId: "tasty-hub-944d3",
+  storageBucket: "tasty-hub-944d3.firebasestorage.app",
+  messagingSenderId: "579351265282",
+  appId: "1:579351265282:web:ebc7476d8990521252e71b",
+  measurementId: "G-FP3WWDV0RP"
 };
 
 // Initialize Firebase
@@ -60,7 +60,7 @@ loginForm.addEventListener('submit', async (e) => {
     try {
         await auth.signInWithEmailAndPassword(email, password);
         alert("Login successful!");
-        window.location.href = "intro.html"; // Redirect to dashboard
+        window.location.href = "dummycamera.html"; // Redirect to dashboard
     } catch (error) {
         console.error("Login failed:", error.message);
         alert("Login failed: " + error.message);
