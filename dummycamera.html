@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Face Verification Camera</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      flex-direction: column;
+    }
+    #video-container {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid blue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    #video, #photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+    }
+    #photo {
+      display: none;
+    }
+    canvas {
+      display: none;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Face Verification Camera</h1>
+  <div id="video-container">
+    <video id="video" autoplay></video>
+    <img id="photo" alt="Captured Photo" />
+  </div>
+  <canvas id="canvas"></canvas>
+  <div>
+    <button id="capture">Capture Photo</button>
+    <button id="save" disabled>Upload Photo</button>
+    <button id="next" disabled>Next</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJsAljeodrp7DB7bAN0l1qibp7-rNJlQw",
+      authDomain: "camera-cc488.firebaseapp.com",
+      databaseURL: "https://camera-cc488-default-rtdb.firebaseio.com",
+      projectId: "camera-cc488",
+      storageBucket: "camera-cc488.firebasestorage.app",
+      messagingSenderId: "423462200209",
+      appId: "1:423462200209:web:88a116d20c7790562d7030",
+      measurementId: "G-PLT4R4766L"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+    const saveButton = document.getElementById('save');
+    const nextButton = document.getElementById('next');
+    const photo = document.getElementById('photo');
+    const context = canvas.getContext('2d');
+
+    // Access Camera
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((error) => {
+          console.error('Error accessing camera:', error);
+        });
+    } else {
+      alert('Camera not supported in this browser.');
+    }
+
+    // Capture Photo
+    captureButton.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataURL = canvas.toDataURL('image/jpeg');
+      photo.src = dataURL;
+      photo.style.display = 'block';
+      video.style.display = 'none';
+      saveButton.disabled = false;
+    });
+
+    // Save Photo to Firebase Realtime Database
+    saveButton.addEventListener('click', () => {
+      const dataURL = canvas.toDataURL('image/jpeg');
+      const fileName = 'photo_' + Date.now();
+
+      const photoData = {
+        image: dataURL,
+        timestamp: Date.now()
+      };
+
+      database.ref('photos/' + fileName).set(photoData)
+        .then(() => {
+          alert('Photo uploaded successfully!');
+          saveButton.disabled = true;
+          nextButton.disabled = false;
+        })
+        .catch((error) => {
+          console.error('Error uploading photo:', error);
+        });
+    });
+
+    // Navigate to view.html on Next button click
+    nextButton.addEventListener('click', () => {
+      window.location.href = 'view.html';
+    });
+  </script>
+</body>
+</html>

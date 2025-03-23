@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Photos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    img {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      margin: 10px;
+      border-radius: 10px;
+      border: 4px solid #007bff;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Saved Photos</h1>
+  <div id="photo-container"></div>
+  <button onclick="window.location.href='index.html'">Back to Camera</button>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAJsAljeodrp7DB7bAN0l1qibp7-rNJlQw",
+      authDomain: "camera-cc488.firebaseapp.com",
+      databaseURL: "https://camera-cc488-default-rtdb.firebaseio.com",
+      projectId: "camera-cc488",
+      storageBucket: "camera-cc488.firebasestorage.app",
+      messagingSenderId: "423462200209",
+      appId: "1:423462200209:web:88a116d20c7790562d7030",
+      measurementId: "G-PLT4R4766L"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const photoContainer = document.getElementById('photo-container');
+
+    // Fetch and Display Photos
+    database.ref('photos').once('value', (snapshot) => {
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          const data = childSnapshot.val();
+          if (data.image) {
+            const img = document.createElement('img');
+            img.src = data.image;
+            img.alt = 'Uploaded Photo';
+            photoContainer.appendChild(img);
+          }
+        });
+      } else {
+        alert('No photos found.');
+      }
+    });
+  </script>
+</body>
+</html>
