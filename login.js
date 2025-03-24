@@ -60,7 +60,7 @@ loginForm.addEventListener('submit', async (e) => {
     try {
         await auth.signInWithEmailAndPassword(email, password);
         alert("Login successful!");
-        window.location.href = "dummycamera.html"; // Redirect to dashboard
+        window.location.href = "intro.html"; // Redirect to dashboard
     } catch (error) {
         console.error("Login failed:", error.message);
         alert("Login failed: " + error.message);
